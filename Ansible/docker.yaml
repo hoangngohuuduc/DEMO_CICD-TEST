@@ -27,7 +27,7 @@
       community.docker.docker_login:
         registry_url: https://index.docker.io/v1/
         username: duchoang26
-        password: dckr_pat_VXddE0AYrB5ovCPm73QZZ8Fhi3w
+        password: dckr_pat_ekADZCaFf5Gxb3JJ65fe2FFBZvw
 
     - name: Push version
       command: docker push {{ image_name }}:{{ image_tag }}

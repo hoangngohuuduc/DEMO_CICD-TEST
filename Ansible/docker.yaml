@@ -1,6 +1,10 @@
 - name: docker build and push
-  hosts: local  # Replace with the hostname or IP address of your target server
-  become: yes  # Run tasks with sudo privileges
+  hosts: local
+  become: yes
+
+  vars:
+    image_name: duchoang26/demo
+    image_tag: "{{ image_tag }}"   # nhận từ Jenkins
 
   tasks:
     - name: Update apt package cache
@@ -8,21 +12,34 @@
         update_cache: yes   
 
     - name: Build Docker Image
-      command: docker build -t demo .
+      command: docker build -t demo:{{ image_tag }} .
       args:
         chdir: /var/lib/jenkins/workspace/demo
 
-    - name: tag image
-      command: docker tag demo:latest duchoang26/demo:latest 
+    - name: Tag image version
+      command: docker tag demo:{{ image_tag }} {{ image_name }}:{{ image_tag }}
+
+    
+    - name: Tag latest
+      command: docker tag demo:{{ image_tag }} {{ image_name }}:latest
 
     - name: Log in to Docker Hub
       community.docker.docker_login:
         registry_url: https://index.docker.io/v1/
         username: duchoang26
-        password: 
+        password: dckr_pat_VXddE0AYrB5ovCPm73QZZ8Fhi3w
 
-    - name: Push image
-      command: docker push duchoang26/demo:latest
+    - name: Push version
+      command: docker push {{ image_name }}:{{ image_tag }}
 
+    - name: Push latest
+      command: docker push {{ image_name }}:latest
+
+ 
+    - name: Remove old container
+      command: docker rm -f pet2
+      ignore_errors: yes
+
+    # 🔥 Run container với version mới
     - name: Run container
-      command: docker run -d --name pet1 -p 8081:8080 duchoang26/demo:latest
+      command: docker run -d --name pet2 -p 8081:8080 {{ image_name }}:{{ image_tag }}

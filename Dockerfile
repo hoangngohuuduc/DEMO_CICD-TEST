@@ -21,9 +21,9 @@
 #RUN ./mvnw clean package
 #CMD ./mvnw cargo:run -P tomcat90
 
-FROM maven:3.9.6-eclipse-temurin-17 AS build
-WORKDIR /app
-COPY . .
+#FROM maven:3.9.6-eclipse-temurin-17 AS build
+#WORKDIR /app
+#COPY . .
 #RUN mvn clean package
 
 FROM tomcat:9-jdk17

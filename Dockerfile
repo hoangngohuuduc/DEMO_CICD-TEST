@@ -26,5 +26,7 @@
 #COPY . .
 #RUN mvn clean package
 
+#FROM tomcat:9-jdk17
+#COPY --from=build /app/target/*.war /usr/local/tomcat/webapps/
 FROM tomcat:9-jdk17
-COPY --from=build /app/target/*.war /usr/local/tomcat/webapps/
+COPY target/*.war /usr/local/tomcat/webapps/
